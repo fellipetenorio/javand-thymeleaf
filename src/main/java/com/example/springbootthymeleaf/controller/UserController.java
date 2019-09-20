@@ -3,11 +3,11 @@ package com.example.springbootthymeleaf.controller;
 import com.example.springbootthymeleaf.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -23,17 +23,17 @@ public class UserController {
         return "demo";
     }
 
-    @RequestMapping("demo2")
-    public String demo2(Model model) {
-
-        List<User> lst = new ArrayList<>();
-        lst.add(new User(1, "Tom", 30));
-        lst.add(new User(2, "Jerry", 29));
-        lst.add(new User(3, "Nancy", 27));
-        model.addAttribute("list", lst);
-
-        return "demo2";
-    }
+//    @RequestMapping("demo2")
+//    public String demo2(Model model) {
+//
+//        List<User> lst = new ArrayList<>();
+//        lst.add(new User(1, "Tom", 30));
+//        lst.add(new User(2, "Jerry", 29));
+//        lst.add(new User(3, "Nancy", 27));
+//        model.addAttribute("list", lst);
+//
+//        return "demo2";
+//    }
 
     @RequestMapping("demo3")
     public String demo3(HttpServletRequest request, Model model) {
@@ -47,6 +47,21 @@ public class UserController {
         request.getSession().getServletContext().setAttribute("application", "application data2");
 
         return "demo2";
+    }
+
+    @RequestMapping("add")
+    public String toAdd(User user) {
+        return "add";
+    }
+
+    @RequestMapping("addUser")
+    public String add(@Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "add";
+        }
+
+        System.out.println("Saver user = " + user);
+        return "success";
     }
 
     private String convertGPA(double grade) {
