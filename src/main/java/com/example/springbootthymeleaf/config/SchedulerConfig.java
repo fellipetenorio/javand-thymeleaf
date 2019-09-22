@@ -15,6 +15,7 @@ public class SchedulerConfig {
 
     @Scheduled(fixedDelay = 5000)
     public void sendAdhocMessages() {
+        System.out.println("New message to broker");
         template.convertAndSend("/topic/user",
                 new UserResponse("Scheduler"));
     }
