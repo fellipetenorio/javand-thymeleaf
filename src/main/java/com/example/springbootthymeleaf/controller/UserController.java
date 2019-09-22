@@ -1,12 +1,13 @@
 package com.example.springbootthymeleaf.controller;
 
 import com.example.springbootthymeleaf.model.User;
+import com.example.springbootthymeleaf.model.websocket.UserResponse;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -67,15 +68,15 @@ public class UserController {
         return "success";
     }
 
-    /// handle specific errors (ArithmeticException)
-    @ExceptionHandler(value = {java.lang.ArithmeticException.class})
-    public ModelAndView handlerArithmeticException(Exception e) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e.toString());
-        mav.setViewName("mathError");
-
-        return mav;
-    }
+//    /// handle specific errors (ArithmeticException)
+//    @ExceptionHandler(value = {java.lang.ArithmeticException.class})
+//    public ModelAndView handlerArithmeticException(Exception e) {
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("exception", e.toString());
+//        mav.setViewName("mathError");
+//
+//        return mav;
+//    }
 
     /// handle specific errors (Null pointer exception)
     @RequestMapping("/update")
@@ -85,13 +86,19 @@ public class UserController {
         return "update";
     }
 
-    @ExceptionHandler(value = {java.lang.NullPointerException.class})
-    public ModelAndView handlerNullPointerException(Exception e) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e.toString());
-        mav.setViewName("nullPointerError");
+//    @ExceptionHandler(value = {java.lang.NullPointerException.class})
+//    public ModelAndView handlerNullPointerException(Exception e) {
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("exception", e.toString());
+//        mav.setViewName("nullPointerError");
+//
+//        return mav;
+//    }
 
-        return mav;
+    @MessageMapping("/user")
+    @SendTo("/topic/user")
+    public UserResponse getUserWebSocket(User user) {
+        return new UserResponse("Hello, " + user.getName());
     }
 
     private String convertGPA(double grade) {
