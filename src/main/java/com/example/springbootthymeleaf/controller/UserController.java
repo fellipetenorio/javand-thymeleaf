@@ -77,6 +77,23 @@ public class UserController {
         return mav;
     }
 
+    /// handle specific errors (Null pointer exception)
+    @RequestMapping("/update")
+    public String update() {
+        String name = null;
+        name = name.toLowerCase(); // this should cause null pointer exception
+        return "update";
+    }
+
+    @ExceptionHandler(value = {java.lang.NullPointerException.class})
+    public ModelAndView handlerNullPointerException(Exception e) {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", e.toString());
+        mav.setViewName("nullPointerError");
+
+        return mav;
+    }
+
     private String convertGPA(double grade) {
         if (grade >= 90) {
             return "A";
