@@ -4,7 +4,9 @@ import com.example.springbootthymeleaf.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -51,6 +53,7 @@ public class UserController {
 
     @RequestMapping("add")
     public String toAdd(User user) {
+        int num = 10 / 0;
         return "add";
     }
 
@@ -62,6 +65,16 @@ public class UserController {
 
         System.out.println("Saver user = " + user);
         return "success";
+    }
+
+    /// handle specific errors (ArithmeticException)
+    @ExceptionHandler(value = {java.lang.ArithmeticException.class})
+    public ModelAndView handlerArithmeticException(Exception e) {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", e.toString());
+        mav.setViewName("mathError");
+
+        return mav;
     }
 
     private String convertGPA(double grade) {
